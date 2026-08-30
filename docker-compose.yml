@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: tross-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  web:
+    build: .
+    container_name: tross-api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - LINKEDIN_LI_AT=${LINKEDIN_LI_AT}
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo_data:
